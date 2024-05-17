@@ -6,25 +6,36 @@ function App() {
   const BASE_URL = "https://jsonplaceholder.typicode.com/posts";
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
   
   useEffect(() => {
     const fetchPosts = async () => {
       setIsLoading(true);
-      const response = await fetch(`${BASE_URL}`);
-      const postsData = await response.json();
-      console.log(postsData);
-      setPosts([...postsData]);
-      setIsLoading(false);
+
+      try {
+        const response = await fetch(`${BASE_URL}`);
+        const postsData = await response.json();
+        setPosts([...postsData]);
+      } catch(e) {
+        setError(e);
+      } finally {
+        setIsLoading(false);
+      }
+
     }
     fetchPosts()
   },[]);
+
+  const handleSort = () => {
+    return setPosts([...posts].sort((a, b) => a.title.localeCompare(b.title)));
+  }
 
   if (isLoading) {
     return <div>Loading...</div>
   }
 
-  const handleSort = () => {
-    return setPosts([...posts].sort((a, b) => a.title.localeCompare(b.title)));
+  if (error) {
+    return <div>Something went wrong! Please try again !</div>
   }
 
   return (
