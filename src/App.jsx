@@ -30,10 +30,6 @@ function App() {
     return setPosts([...posts].sort((a, b) => a.title.localeCompare(b.title)));
   }
 
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-
   if (error) {
     return <div>Something went wrong! Please try again !</div>
   }
@@ -44,13 +40,16 @@ function App() {
         <h1>Data fetching</h1>
       </header>
       <h2>title list:</h2>
-    <ul>
-      {posts.map( post => {
-        return <li key={post.id}>{post.title}</li>;
-      }
+      {isLoading && <div>Loading...</div>}
+      {!isLoading && (
+        <ul>
+          {posts.map( post => {
+            return <li key={post.id}>{post.title}</li>;
+          }
+          )}
+        </ul>
       )}
-    </ul>
-    <button onClick={handleSort}>order</button>
+      <button onClick={handleSort}>order</button>
     </div>
   )
 }
